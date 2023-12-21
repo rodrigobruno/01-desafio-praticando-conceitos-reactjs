@@ -15,8 +15,12 @@ import {
   TasksEmpty,
 } from './components/styles'
 import clipboardImg from '../../assets/clipboard.svg'
+import { useContext } from 'react'
+import { TasksContext } from '../../context/TasksContext'
 
 export function Todo() {
+  const { tasks } = useContext(TasksContext)
+
   return (
     <>
       <Header />
@@ -31,45 +35,35 @@ export function Todo() {
           </TasksCompleted>
         </TasksInfos>
 
-        <TasksList>
-          <TaskCard isChecked={false}>
-            <TaskCheckbox id="c1">
-              <Checkbox.Indicator>
-                <Check size={10} weight="bold" />
-              </Checkbox.Indicator>
-            </TaskCheckbox>
-            <label htmlFor="c1">
-              Integer urna interdum massa libero auctor neque turpis turpis
-              semper. Duis vel sed fames integer.
-            </label>
-            <TaskDeleteButton>
-              <Trash size={14} />
-            </TaskDeleteButton>
-          </TaskCard>
+        {tasks.length > 0 && (
+          <TasksList>
+            {tasks.map((task) => {
+              return (
+                <TaskCard $isChecked={!!task.finishedDate} key={task.id}>
+                  <TaskCheckbox id={task.id}>
+                    <Checkbox.Indicator>
+                      <Check size={10} weight="bold" />
+                    </Checkbox.Indicator>
+                  </TaskCheckbox>
+                  <label htmlFor={task.id}>{task.task}</label>
+                  <TaskDeleteButton>
+                    <Trash size={14} />
+                  </TaskDeleteButton>
+                </TaskCard>
+              )
+            })}
+          </TasksList>
+        )}
 
-          <TaskCard isChecked={true}>
-            <TaskCheckbox id="c2" defaultChecked>
-              <Checkbox.Indicator>
-                <Check size={10} weight="bold" />
-              </Checkbox.Indicator>
-            </TaskCheckbox>
-            <label htmlFor="c2">
-              Integer urna interdum massa libero auctor neque turpis turpis
-              semper. Duis vel sed fames integer.
-            </label>
-            <TaskDeleteButton disabled={true}>
-              <Trash size={14} />
-            </TaskDeleteButton>
-          </TaskCard>
-        </TasksList>
-
-        <TasksEmpty>
-          <img src={clipboardImg} alt="" />
-          <p>
-            <strong>Você ainda não tem tarefas cadastradas</strong>
-            Crie tarefas e organize seus itens a fazer
-          </p>
-        </TasksEmpty>
+        {tasks.length === 0 && (
+          <TasksEmpty>
+            <img src={clipboardImg} alt="" />
+            <p>
+              <strong>Você ainda não tem tarefas cadastradas</strong>
+              Crie tarefas e organize seus itens a fazer
+            </p>
+          </TasksEmpty>
+        )}
       </TasksContainer>
     </>
   )

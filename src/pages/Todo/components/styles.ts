@@ -39,7 +39,7 @@ export const TasksList = styled.ul`
 `
 
 interface TaskCardProps {
-  isChecked: boolean
+  $isChecked: boolean
 }
 
 export const TaskCard = styled.li<TaskCardProps>`
@@ -59,7 +59,7 @@ export const TaskCard = styled.li<TaskCardProps>`
     flex: 1;
     line-height: 1.225rem;
     ${(props) =>
-      props.isChecked
+      props.$isChecked
         ? css`
             text-decoration: line-through;
             color: ${(props) => props.theme['gray-300']};
