@@ -13,19 +13,22 @@ import {
   TaskCheckbox,
   Badge,
   TasksEmpty,
-} from './components/styles'
+} from './styles'
 import clipboardImg from '../../assets/clipboard.svg'
 import { useContext } from 'react'
 import { TasksContext } from '../../context/TasksContext'
 
 export function Todo() {
-  const { tasks, deleteTask } = useContext(TasksContext)
+  const {
+    tasks,
+    totalTasks,
+    completedTasks,
+    deleteTask,
+    markTaskAsFinished,
+    markTaskAsUnfinished,
+  } = useContext(TasksContext)
 
-  function handleDeleteTask(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    taskId: string,
-  ) {
-    e.preventDefault()
+  function handleDeleteTask(taskId: string) {
     deleteTask(taskId)
   }
 
@@ -36,10 +39,13 @@ export function Todo() {
       <TasksContainer>
         <TasksInfos>
           <TasksCreated>
-            Tarefas criadas <Badge>0</Badge>
+            Tarefas criadas <Badge>{totalTasks}</Badge>
           </TasksCreated>
           <TasksCompleted>
-            Concluídas <Badge>2 de 5</Badge>
+            Concluídas{' '}
+            <Badge>
+              {completedTasks} de {totalTasks}
+            </Badge>
           </TasksCompleted>
         </TasksInfos>
 
@@ -47,16 +53,22 @@ export function Todo() {
           <TasksList>
             {tasks.map((task) => {
               return (
-                <TaskCard $isChecked={!!task.finishedDate} key={task.id}>
-                  <TaskCheckbox id={task.id}>
+                <TaskCard $isChecked={task.completed} key={task.id}>
+                  <TaskCheckbox
+                    id={task.id}
+                    checked={task.completed}
+                    onClick={() =>
+                      task.completed
+                        ? markTaskAsUnfinished(task.id)
+                        : markTaskAsFinished(task.id)
+                    }
+                  >
                     <Checkbox.Indicator>
                       <Check size={10} weight="bold" />
                     </Checkbox.Indicator>
                   </TaskCheckbox>
                   <label htmlFor={task.id}>{task.task}</label>
-                  <TaskDeleteButton
-                    onClick={(e) => handleDeleteTask(e, task.id)}
-                  >
+                  <TaskDeleteButton onClick={() => handleDeleteTask(task.id)}>
                     <Trash size={14} />
                   </TaskDeleteButton>
                 </TaskCard>
