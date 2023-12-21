@@ -1,19 +1,15 @@
-import { createContext, ReactNode, useState } from 'react'
+import { createContext, ReactNode, useReducer } from 'react'
+import { Task, tasksReducer } from '../reducers/tasks/reducer'
+import { addNewTaskAction, deleteTaskAction } from '../reducers/tasks/actions'
 
 interface CreateTaskData {
   task: string
 }
 
-interface Task {
-  id: string
-  task: string
-  createdDate: Date
-  finishedDate?: Date
-}
-
 interface TasksContextType {
   tasks: Task[]
   createNewTask: (data: CreateTaskData) => void
+  deleteTask: (taskId: string) => void
 }
 
 export const TasksContext = createContext({} as TasksContextType)
@@ -23,7 +19,11 @@ interface TasksContextProviderProps {
 }
 
 export function TasksContextProvider({ children }: TasksContextProviderProps) {
-  const [tasks, setTasks] = useState<Task[]>([])
+  const [tasksState, dispatch] = useReducer(tasksReducer, {
+    tasks: [],
+  })
+
+  const { tasks } = tasksState
 
   function createNewTask(data: CreateTaskData) {
     const id = String(new Date().getTime())
@@ -34,7 +34,11 @@ export function TasksContextProvider({ children }: TasksContextProviderProps) {
       createdDate: new Date(),
     }
 
-    setTasks((state) => [...state, newTask])
+    dispatch(addNewTaskAction(newTask))
+  }
+
+  function deleteTask(taskId: string) {
+    dispatch(deleteTaskAction(taskId))
   }
 
   return (
@@ -42,6 +46,7 @@ export function TasksContextProvider({ children }: TasksContextProviderProps) {
       value={{
         tasks,
         createNewTask,
+        deleteTask,
       }}
     >
       {children}

@@ -23,7 +23,6 @@ export function CreateTaskForm() {
   const { createNewTask } = useContext(TasksContext)
 
   function handleCreateNewTask(data: NewTaskFormData) {
-    console.log(data)
     createNewTask(data)
     reset()
   }

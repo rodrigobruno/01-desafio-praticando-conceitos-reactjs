@@ -19,7 +19,15 @@ import { useContext } from 'react'
 import { TasksContext } from '../../context/TasksContext'
 
 export function Todo() {
-  const { tasks } = useContext(TasksContext)
+  const { tasks, deleteTask } = useContext(TasksContext)
+
+  function handleDeleteTask(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    taskId: string,
+  ) {
+    e.preventDefault()
+    deleteTask(taskId)
+  }
 
   return (
     <>
@@ -46,7 +54,9 @@ export function Todo() {
                     </Checkbox.Indicator>
                   </TaskCheckbox>
                   <label htmlFor={task.id}>{task.task}</label>
-                  <TaskDeleteButton>
+                  <TaskDeleteButton
+                    onClick={(e) => handleDeleteTask(e, task.id)}
+                  >
                     <Trash size={14} />
                   </TaskDeleteButton>
                 </TaskCard>
