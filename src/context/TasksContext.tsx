@@ -32,8 +32,6 @@ export function TasksContextProvider({ children }: TasksContextProviderProps) {
     tasks: [],
   })
 
-  console.log(tasksState)
-
   const { tasks } = tasksState
   const totalTasks = tasks.length
 

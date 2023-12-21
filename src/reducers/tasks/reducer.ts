@@ -30,7 +30,6 @@ export function tasksReducer(state: TasksState, action: ActionProps) {
     }
 
     case ActionTypes.DELETE_TASK: {
-      console.log('DELETE_TASK')
       const taskToDelete = state.tasks.findIndex((task) => {
         return task.id === action.payload.taskId
       })
